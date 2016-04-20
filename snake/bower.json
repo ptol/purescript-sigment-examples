@@ -1,0 +1,18 @@
+{
+  "name": "snake",
+  "version": "1.0.0",
+  "moduleType": [
+    "node"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "output"
+  ],
+  "dependencies": {
+    "purescript-sigment": "~0.1.1",
+    "purescript-timers": "",
+    "purescript-random": ""
+  }
+}
