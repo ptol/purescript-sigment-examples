@@ -11,6 +11,20 @@
     "output"
   ],
   "dependencies": {
-    "purescript-sigment": "~0.1.1"
+    "purescript-sigment": "#master",
+    "purescript-prelude": "",
+    "purescript-math": "^2.0.0",
+    "purescript-preface": "^1.0.1"
+  },
+  "resolutions": {
+    "purescript-tuples": "^1.0.0",
+    "purescript-maybe": "^1.0.0",
+    "purescript-foldable-traversable": "^1.0.0",
+    "purescript-prelude": "^1.0.0",
+    "purescript-monoid": "^1.0.0",
+    "purescript-bifunctors": "^1.0.0",
+    "purescript-eff": "^1.0.0",
+    "purescript-control": "^1.0.0",
+    "purescript-invariant": "^1.0.0"
   }
 }
