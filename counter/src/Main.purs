@@ -1,10 +1,12 @@
 module Main where
 
 import Prelude
+import Math
 import Sigment
 import Sigment.Dom as D
 import Sigment.Dom.Props as P
 import Sigment.Dom.Tweens as T
+import Data.Semigroup
 
 data Action = Increase | Decrease
 
@@ -20,8 +22,8 @@ eval Increase = (_ + 1)
 eval Decrease = (_ - 1)
 
 defaultStyle = P.style {font: "30px Verdana", fill : "white"}
-text str props = D.text $ [P.txt str, defaultStyle, P.anchorCenter] ++ props
-countUpdate = T.updating $ [T.from [P.scale1 1.0], T.to [P.scale1 2.0], T.duration 300, T.easingCubic.out] ++ T.yoyoOnce
+text str props = D.text $ append [P.txt str, defaultStyle, P.anchorCenter] props
+countUpdate = T.updating $ append [T.from [P.scale1 1.0], T.to [P.scale1 2.0], T.duration 300, T.easingCubic.out] T.yoyoOnce
 render :: Render Action Model _
 render _ state dispatch = D.group' [P.x 120, P.y 200] [
   text "+" [P.onClick (dispatch Increase), P.x 30],

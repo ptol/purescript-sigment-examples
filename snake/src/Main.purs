@@ -2,10 +2,13 @@ module Main where
 
 import Prelude
 import Sigment
+import Sigment as Sigment
 import Data.Array
-import Data.Array.Unsafe as U
+import Data.Array.Partial as AP
+-- import Data.Array.Unsafe as U
+import Partial.Unsafe as U
 import Data.Maybe
-import Data.Maybe.Unsafe
+-- import Data.Maybe.Unsafe
 import Control.Monad.Eff
 import Data.Tuple
 import DOM.Timer as Timer
@@ -63,28 +66,28 @@ isOut x size = x < 0 || x >= size
 positionIsOut :: Position -> Boolean
 positionIsOut (Tuple x y) = isOut x cellCount || isOut y cellCount
 
-gameOver :: Model -> Boolean
+gameOver :: Partial => Model -> Boolean
 gameOver state =
-  positionIsOut head || elem head (U.tail state.snake)
+  positionIsOut head || elem head (AP.tail state.snake)
   where
-    head = U.head state.snake
+    head = AP.head state.snake
 
 
 
 changePosition directionIndex pos = Tuple (fst pos + fst direction) (snd pos + snd direction)
   where
-    direction = U.unsafeIndex directions directionIndex
+    direction = AP.unsafeIndex directions directionIndex
 
-eval :: Eval Action Model _
+eval :: Partial => Eval Action Model _
 eval (ChangeDirection direction) state dispatch = do
   pure $ state {direction = direction}
 eval Move state dispatch = do
   Timer.timeout 100 (dispatch Move) *> pure unit
   if gameOver newState then init else pure newState
   where
-    head = state.snake # U.head
+    head = state.snake # AP.head
     newHeadPosition = changePosition state.direction head
-    snake = if elem newHeadPosition state.food then newHeadPosition : state.snake else newHeadPosition : U.init state.snake
+    snake = if elem newHeadPosition state.food then newHeadPosition : state.snake else newHeadPosition : AP.init state.snake
     food = delete newHeadPosition state.food
     newState = state {snake = snake, food = food}
 
@@ -100,7 +103,7 @@ render action state dispatch =
     snake = D.group $ state.snake <#> (\(Tuple x y) -> D.sprite [P.src snakeSprite, P.x $ x * cellSize, P.y $ y * cellSize])
     food = D.group $ state.food <#> (\(Tuple x y) -> D.sprite [P.src foodSprite, P.x $ x * cellSize, P.y $ y * cellSize])
 
-component :: Component Unit Action Model _
+component :: Partial => Component Unit Action Model _
 component = newComponent (const init) eval render
 
 main = do
@@ -111,4 +114,4 @@ main = do
         height = size,
         width = size,
         initAction = Just Move}
-  Sigment.init config unit component
+  U.unsafePartial $ Sigment.init config unit component
